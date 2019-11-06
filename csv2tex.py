@@ -13,7 +13,7 @@ import getopt
 
 # Input validation with getopt()
 
-optlist, args = getopt.getopt(sys.argv[1:], 'i:')
+optlist, args = getopt.getopt(sys.argv[1:], 'bi:')
 
 if args == []:
     print("Missing the .csv filename")
@@ -21,8 +21,9 @@ if args == []:
     print("Usage: csv2tex [options] <file.csv>")
     print("")
     print("     options:")
-    print("     -i   : Specify the column names that should be ignored")
-    print("            separated by comma") 
+    print("     -i  : Specify the column names that should be ignored")
+    print("           separated by comma") 
+    print("     -b  : Add \\bigstrut to every line")
     sys.exit()
 
 # read in csv file line by line
@@ -37,21 +38,30 @@ with open(args[0]) as csvDataFile:
 # print as tex code
 tex = ''
 data = [ x for x in data if x != [] ]
-# remove ignored column
-if optlist != []: # check if arguments were given, skip if not
-    if ',' in optlist[0][1]: # check if more than one column should be ignored
-        colNames = optlist[0][1].split(',')
+
+###
+def remove_column(colName):
+    indexCol = data[0].index(colName)
+    for n in enumerate(data):
+        del data[n[0]][indexCol]
+###
+###
+for n in range(len(optlist)):
+    if '-i' in optlist[n]:
+        if ',' in optlist[n][1]: # check if more than one column should be ignored
+            colNames = optlist[n][1].split(',')
+            for x in colNames:
+                remove_column(x)
+        else:
+            colNames = optlist[n][1]
+            remove_column(colNames)
+    elif '-b' in optlist[n]:
+        lineBreak = '\\bigstrut \\\\' 
     else:
-        colNames = optlist[0][1]
-    if type(colNames) in [list]: # check if colNames is a list
-        for x in colNames:
-            indexCol = data[0].index(x)
-            for n in range(len(data)):
-                del data[n][indexCol]
-    else:
-        indexCol = data[0].index(optlist[0][1])
-        for n in range(len(data)):
-            del data[n][indexCol]
+        lineBreak = '\\\\'
+        continue 
+###
+    
 # count columns
 nCol = len(data[0])
 tex = tex + '\\begin{tabular}{l' + (nCol - 1) * 'c' + '}\n\\hline\n'
@@ -61,7 +71,7 @@ for n in range(len(data)-1):
     for i in data[n]:
         newLine = newLine + i + '&' 
     newLine = newLine[:-1]
-    newLine = newLine + '\\\\'
+    newLine = newLine + lineBreak
     newLine = newLine + '\n'
     if n == 0:
         newLine = newLine + '\\hline\n'
@@ -73,7 +83,7 @@ for i in data[n]:
 newLine = newLine[:-1]
 tex = tex + newLine
 newLine = newLine[len(newLine):]
-newLine = newLine + '\\\\'
+newLine = newLine + lineBreak
 newLine = newLine + '\n'
 newLine = newLine + '\\hline'
 tex = tex + newLine
