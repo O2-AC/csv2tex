@@ -73,6 +73,7 @@ for i in data[n]:
 newLine = newLine[:-1]
 tex = tex + newLine
 newLine = newLine[len(newLine):]
+newLine = newLine + '\\\\'
 newLine = newLine + '\n'
 newLine = newLine + '\\hline'
 tex = tex + newLine
