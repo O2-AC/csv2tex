@@ -21,7 +21,8 @@ if args == []:
     print("Usage: csv2tex [options] <file.csv>")
     print("")
     print("     options:")
-    print("     -i   : Specify the column name that should be ignored")
+    print("     -i   : Specify the column names that should be ignored")
+    print("            separated by comma") 
     sys.exit()
 
 # read in csv file line by line
@@ -37,10 +38,20 @@ with open(args[0]) as csvDataFile:
 tex = ''
 
 # remove ignored column
-if optlist != []:
-    indexCol = data[0].index(optlist[0][1])
-    for n in range(len(data)):
-        del data[n][indexCol]
+if optlist != []: # check if arguments were given, skip if not
+    if ',' in optlist[0][1]: # check if more than one column should be ignored
+        colNames = optlist[0][1].split(',')
+    else:
+        colNames = optlist[0][1]
+    if type(colNames) in [list]: # check if colNames is a list
+        for x in colNames:
+            indexCol = data[0].index(x)
+            for n in range(len(data)):
+                del data[n][indexCol]
+    else:
+        indexCol = data[0].index(optlist[0][1])
+        for n in range(len(data)):
+            del data[n][indexCol]
 # count columns
 nCol = len(data[0])
 tex = tex + '\\begin{tabular}{l' + (nCol - 1) * 'c' + '}\n\\hline\n'
