@@ -56,7 +56,7 @@ if optlist != []: # check if arguments were given, skip if not
 nCol = len(data[0])
 tex = tex + '\\begin{tabular}{l' + (nCol - 1) * 'c' + '}\n\\hline\n'
 # This reads all lines and parses them to tex output 
-for n in range(len(data)):
+for n in range(len(data)-1):
     newLine = ''
     for i in data[n]:
         newLine = newLine + i + '&' 
@@ -66,7 +66,13 @@ for n in range(len(data)):
     if n == 0:
         newLine = newLine + '\\hline\n'
     tex = tex + newLine
-newLine = newLine[:-3]
+newLine = ''
+n = n + 1
+for i in data[n]:
+    newLine = newLine + i + '&'
+newLine = newLine[:-1]
+tex = tex + newLine
+newLine = newLine[len(newLine):]
 newLine = newLine + '\n'
 newLine = newLine + '\\hline'
 tex = tex + newLine
