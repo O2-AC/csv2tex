@@ -12,8 +12,11 @@ add the `$HOME/bin` directory to your `$PATH` variable.
 csv2tex [options] <file.csv>
 ```
 
-For now you can ignore one column from the `.csv` file by using the 
-`-i <column title>` switch.
+For now you can ignore columns from the `.csv` file by using the 
+`-i <column title>` switch. And separating the different columns
+by a comma.
+Additionally you can enable the `-b` switch to add `\bigstrut`
+add the end of each entry to increase the space between the rows.
 
 ## Example
 ```
