@@ -36,7 +36,7 @@ with open(args[0]) as csvDataFile:
         data.append(row)
 # print as tex code
 tex = ''
-
+data = [ x for x in data if x != [] ]
 # remove ignored column
 if optlist != []: # check if arguments were given, skip if not
     if ',' in optlist[0][1]: # check if more than one column should be ignored
